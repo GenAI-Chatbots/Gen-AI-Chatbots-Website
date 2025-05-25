@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generative AI-Driven Chatbots for Educational Support | Research Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/framer-motion@11.0.8/dist/framer-motion.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        
+        :root {
+            --primary-black: #000000;
+            --secondary-black: #0a0a0a;
+            --dark-gray: #111111;
+            --medium-gray: #1a1a1a;
+            --light-gray: #2a2a2a;
+            --purple: #8b5cf6;
+            --purple-dark: #7c3aed;
+            --cyan: #06b6d4;
+            --cyan-dark: #0891b2;
+        }
+        
+        body {
+            background-color: var(--primary-black);
+            color: #ffffff;
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--purple), var(--cyan));
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+        
+        .glassmorphism {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        
+        .glassmorphism-card {
+            background: rgba(26, 26, 26, 0.8);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(139, 92, 246, 0.1);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, var(--purple), var(--cyan));
+        }
+        
+        .hero-bg {
+            background: radial-gradient(ellipse at center, rgba(139, 92, 246, 0.1) 0%, var(--primary-black) 50%),
+                        linear-gradient(135deg, rgba(6, 182, 212, 0.05) 0%, var(--primary-black) 100%);
+        }
+        
+        .card-hover {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px rgba(139, 92, 246, 0.2);
+        }
+        
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+        
+        .neon-glow:hover {
+            box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+        }
+        
+        .cyber-grid {
+            background-image: 
+                linear-gradient(rgba(139, 92, 246, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(139, 92, 246, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: .5;
+            }
+        }
+        
+        .floating-animation {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-animation-robot {
+            animation: float 6s ease-in-out infinite;
+            margin-top: 25px;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .glow-text {
+            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        
+        .border-gradient {
+            border: 2px solid transparent;
+            background: linear-gradient(var(--dark-gray), var(--dark-gray)) padding-box,
+                        linear-gradient(135deg, var(--purple), var(--cyan)) border-box;
+        }
+        
+        .tech-pattern {
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238b5cf6' fill-opacity='0.1'%3E%3Cpath d='m36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        /* Floating Background Orbs */
+        .floating-orb-1, .floating-orb-2, .floating-orb-3 {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .floating-orb-1 {
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3));
+            top: 10%;
+            left: -10%;
+            animation-delay: 0s;
+        }
+
+        .floating-orb-2 {
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(45deg, rgba(6, 182, 212, 0.2), rgba(139, 92, 246, 0.2));
+            top: 60%;
+            right: -5%;
+            animation-delay: 2s;
+        }
+
+        .floating-orb-3 {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(45deg, rgba(139, 92, 246, 0.15), rgba(6, 182, 212, 0.15));
+            bottom: 20%;
+            left: 70%;
+            animation-delay: 4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(-20px) translateX(10px); }
+            66% { transform: translateY(10px) translateX(-5px); }
+        }
+
+        /* Pulse animation for icons */
+        .icon-container {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { 
+                box-shadow: 0 0 5px rgba(139, 92, 246, 0.3);
+                transform: scale(1);
+            }
+            50% { 
+                box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
+                transform: scale(1.05);
+            }
+        }
+
+        /* Method icon rotation */
+        .method-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .method-icon:hover {
+            transform: rotate(360deg);
+        }
+
+        /* Check icon bounce */
+        .check-icon {
+            animation: bounce-in 0.6s ease;
+        }
+
+        @keyframes bounce-in {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Objective numbers pulse */
+        .objective-number {
+            animation: number-pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes number-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+    </style>
+</head>
+
+<body class="bg-black text-white">
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator" id="scrollIndicator"></div>
+    
+    <!-- Navigation -->
+    <nav class="fixed top-0 left-0 right-0 z-50 glassmorphism transform translate-y-0 transition-transform duration-300 ease-in-out">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <span class="text-xl font-bold gradient-text mono">Gen-AI Chatbots</span>
+                    <!-- <span class="text-xl font-bold gradient-text mono">Module-Specific Educational Support</span> -->
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Home</a>
+                        <div class="relative group">
+                            <a href="#scope" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Project Scope</a>
+                            <div class="absolute left-0 mt-2 w-48 rounded-md shadow-lg bg-gray-900 border border-purple-500/20 ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                                <div class="py-1">
+                                    <a href="#literature" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Literature Survey</a>
+                                    <a href="#gap" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Research Gap</a>
+                                    <a href="#problem" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Problem & Solution</a>
+                                    <a href="#objectives" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Objectives</a>
+                                    <a href="#methodology" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Methodology</a>
+                                    <a href="#technologies" class="block px-4 py-2 text-sm text-gray-300 hover:bg-gray-800 hover:text-purple-400">Technologies</a>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#milestones" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Milestones</a>
+                        <a href="#downloads" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Downloads</a>
+                        <a href="#team" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Our Team</a>
+                        <a href="#contact" class="nav-link text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition duration-300">Contact</a>
+                    </div>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-300 hover:text-purple-400 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-gray-900 border-t border-purple-500/20 shadow-lg">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <a href="#home" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Home</a>
+                <a href="#scope" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Project Scope</a>
+                <a href="#milestones" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Milestones</a>
+                <a href="#downloads" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Downloads</a>
+                <a href="#team" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Our Team</a>
+                <a href="#contact" class="block px-3 py-2 text-gray-300 hover:bg-gray-800 hover:text-purple-400 rounded-md">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero-bg min-h-screen flex items-center justify-center relative overflow-hidden cyber-grid">
+        <div class="absolute inset-0 tech-pattern opacity-30"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div id="hero-icon" class="floating-animation-robot">
+                <i class="fas fa-robot text-6xl text-purple-400 mb-4 mt-5 opacity-80 glow-text"></i>
+            </div>
+            <div id="hero-title">
+                <h1 class="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight glow-text">
+                    Generative AI-Driven Chatbots
+                    <br>
+                    <span class="gradient-text">for Educational Support</span>
+                </h1>
+            </div>
+            <div id="hero-description">
+                <p class="text-xl md:text-2xl text-gray-300 mb-8 max-w-4xl mx-auto leading-relaxed">
+                    This research presents the development of a suite of four Generative AI chatbots, each tailored to module-specific subject areas: Programming, Mathematics, English, and Technical Subjects. These chatbots are designed to address the critical gap in current educational technologies by fostering deep conceptual understanding through step-by-step guidance.
+                </p>
+            </div>
+            <div id="hero-buttons" class="flex flex-col sm:flex-row gap-4 justify-center">
+                <button onclick="scrollToSection('scope')" class="glassmorphism-card text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-600/20 hover:border-purple-400/30 transition duration-300 transform hover:scale-105 neon-glow">
+                    <i class="fas fa-eye mr-2"></i>Explore Research
+                </button>
+                <button onclick="scrollToSection('downloads')" class="gradient-bg text-white px-8 py-4 rounded-full text-lg font-semibold hover:opacity-90 transition duration-300 transform hover:scale-105 neon-glow">
+                    <i class="fas fa-download mr-2"></i>Download Report
+                </button>
+            </div>
+        </div>
+        <!-- <div id="scroll-indicator" class="absolute bottom-4 left-1/2 transform -translate-x-1/2 animate-bounce">
+            <i class="fas fa-chevron-down text-purple-400 text-2xl glow-text"></i>
+        </div> -->
+    </section>
+
+    <!-- Project Scope Section -->
+    <section id="scope" class="py-20 bg-gray-900 relative overflow-hidden">
+        <!-- Animated Background Elements -->
+        <div class="absolute inset-0 opacity-10">
+            <div class="floating-orb-1"></div>
+            <div class="floating-orb-2"></div>
+            <div class="floating-orb-3"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div id="scope-header" class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold gradient-text mb-4 glow-text scope-title">Project Scope</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto scope-subtitle">
+                    Comprehensive development of AI-driven educational chatbots targeting specific learning modules
+                </p>
+            </div>
+
+            <!-- Literature Survey -->
+            <div id="literature" class="mb-20 literature-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 literature-header">
+                        <div class="w-12 h-12 bg-purple-500/20 border border-purple-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-book text-purple-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Literature Survey</h3>
+                    </div>
+                    <p class="text-gray-300 mb-4 literature-text">
+                        The integration of Artificial Intelligence in education has led to a paradigm shift in teaching and learning methodologies. Traditional education systems have long relied on instructor-led teaching, static curricula, and standardized assessments, which often fail to accommodate individual learning styles and needs.
+                    </p>
+                    <ul class="space-y-2 text-gray-300 literature-list">
+                        <li class="flex items-start list-item-1">
+                            <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3 check-icon"></i>
+                            Evolution from rule-based expert systems to adaptive ML and deep learning techniques
+                        </li>
+                        <li class="flex items-start list-item-2">
+                            <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3 check-icon"></i>
+                            Natural Language Processing revolutionizing automated tutoring
+                        </li>
+                        <li class="flex items-start list-item-3">
+                            <i class="fas fa-check-circle text-cyan-400 mt-1 mr-3 check-icon"></i>
+                            AI chatbots promoting active learning strategies and critical thinking
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Research Gap -->
+            <div id="gap" class="mb-20 gap-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 gap-header">
+                        <div class="w-12 h-12 bg-red-500/20 border border-red-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-exclamation-triangle text-red-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Research Gap</h3>
+                    </div>
+                    <p class="text-gray-300 mb-4 gap-text">
+                        Current educational technologies often focus on providing direct answers rather than fostering deep conceptual understanding. There is a critical gap in systems that provide step-by-step guidance while enhancing critical thinking and problem-solving skills.
+                    </p>
+                    <div class="grid md:grid-cols-2 gap-4 gap-grid">
+                        <div class="bg-gray-800/50 border border-purple-500/20 p-4 rounded-lg shadow-sm gap-card-left">
+                            <h4 class="font-semibold text-white mb-2">Current Limitations</h4>
+                            <ul class="text-sm text-gray-400 space-y-1">
+                                <li class="limitation-item-1">• Direct answer provision without explanation</li>
+                                <li class="limitation-item-2">• Lack of module-specific customization</li>
+                                <li class="limitation-item-3">• Limited step-by-step guidance</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-800/50 border border-cyan-500/20 p-4 rounded-lg shadow-sm gap-card-right">
+                            <h4 class="font-semibold text-white mb-2">Our Solution</h4>
+                            <ul class="text-sm text-gray-400 space-y-1">
+                                <li class="solution-item-1">• Socratic questioning methodology</li>
+                                <li class="solution-item-2">• Subject-specific AI architectures</li>
+                                <li class="solution-item-3">• Progressive learning approach</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Problem & Solution -->
+            <div id="problem" class="mb-20 problem-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 problem-header">
+                        <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-lightbulb text-cyan-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Research Problem & Solution</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-8 problem-grid">
+                        <div class="problem-left">
+                            <h4 class="text-lg font-semibold text-white mb-3">Problem Statement</h4>
+                            <p class="text-gray-300 mb-4">
+                                Students lack access to personalized, module-specific tutoring that promotes conceptual understanding rather than memorization.
+                            </p>
+                        </div>
+                        <div class="problem-right">
+                            <h4 class="text-lg font-semibold text-white mb-3">Proposed Solution</h4>
+                            <p class="text-gray-300 mb-4">
+                                Development of four specialized AI chatbots using distinct methodologies: SLMs for programming, LLMs for mathematics and English, and RAG for technical subjects.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Research Objectives -->
+            <div id="objectives" class="mb-20 objectives-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 objectives-header">
+                        <div class="w-12 h-12 bg-purple-500/20 border border-purple-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-target text-purple-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Research Objectives</h3>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6 objectives-grid">
+                        <div class="space-y-3 objectives-left">
+                            <div class="flex items-start objective-item-1">
+                                <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 objective-number">1</span>
+                                <p class="text-gray-300">Develop scalable and cost-effective GenAI chatbots for university curricula</p>
+                            </div>
+                            <div class="flex items-start objective-item-2">
+                                <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 objective-number">2</span>
+                                <p class="text-gray-300">Implement distinct AI methodologies for different subject areas</p>
+                            </div>
+                        </div>
+                        <div class="space-y-3 objectives-right">
+                            <div class="flex items-start objective-item-3">
+                                <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 objective-number">3</span>
+                                <p class="text-gray-300">Enhance critical thinking and problem-solving skills through step-by-step guidance</p>
+                            </div>
+                            <div class="flex items-start objective-item-4">
+                                <span class="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-semibold mr-3 mt-0.5 objective-number">4</span>
+                                <p class="text-gray-300">Evaluate performance across accuracy, clarity, and engagement dimensions</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Methodology -->
+            <div id="methodology" class="mb-20 methodology-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 methodology-header">
+                        <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-cogs text-cyan-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Methodology</h3>
+                    </div>
+                    <div id="methodology-cards" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 methodology-grid">
+                        <div class="bg-gray-800/50 border border-purple-500/20 p-6 rounded-lg shadow-sm text-center card-hover method-card-1">
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4 method-icon">
+                                <i class="fas fa-code text-white text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-white mb-2">Programming</h4>
+                            <p class="text-sm text-gray-400">Small Language Models (SLMs) with Socratic questioning</p>
+                        </div>
+                        <div class="bg-gray-800/50 border border-cyan-500/20 p-6 rounded-lg shadow-sm text-center card-hover method-card-2">
+                            <div class="w-16 h-16 bg-gradient-to-r from-cyan-500 to-cyan-600 rounded-full flex items-center justify-center mx-auto mb-4 method-icon">
+                                <i class="fas fa-calculator text-white text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-white mb-2">Mathematics</h4>
+                            <p class="text-sm text-gray-400">Large Language Models (LLMs) with symbolic computation</p>
+                        </div>
+                        <div class="bg-gray-800/50 border border-purple-500/20 p-6 rounded-lg shadow-sm text-center card-hover method-card-3">
+                            <div class="w-16 h-16 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 method-icon">
+                                <i class="fas fa-language text-white text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-white mb-2">English</h4>
+                            <p class="text-sm text-gray-400">LLMs with audio-visual interaction capabilities</p>
+                        </div>
+                        <div class="bg-gray-800/50 border border-cyan-500/20 p-6 rounded-lg shadow-sm text-center card-hover method-card-4">
+                            <div class="w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full flex items-center justify-center mx-auto mb-4 method-icon">
+                                <i class="fas fa-database text-white text-xl"></i>
+                            </div>
+                            <h4 class="font-semibold text-white mb-2">Technical</h4>
+                            <p class="text-sm text-gray-400">Retrieval-Augmented Generation (RAG) approach</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technologies Used -->
+            <div id="technologies" class="mb-20 tech-card">
+                <div class="glassmorphism-card rounded-2xl p-8 card-hover border-gradient">
+                    <div class="flex items-center mb-6 tech-header">
+                        <div class="w-12 h-12 bg-gray-500/20 border border-gray-500/30 rounded-full flex items-center justify-center mr-4 icon-container">
+                            <i class="fas fa-microchip text-gray-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white">Technologies Used</h3>
+                    </div>
+                    <div id="tech-cards" class="grid md:grid-cols-3 gap-6 tech-grid">
+                        <div class="bg-gray-800/50 border border-purple-500/20 p-6 rounded-lg shadow-sm card-hover tech-card-1">
+                            <h4 class="font-semibold text-white mb-3">AI Models</h4>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="mono tech-item-1">• DeepSeek, Phi-3, CodeBERT</li>
+                                <li class="mono tech-item-2">• Meta-Llama-3.1-8B-Instruct</li>
+                                <li class="mono tech-item-3">• Gemma LLM</li>
+                                <li class="mono tech-item-4">• Mathewhe/DCLM-7B-Chat</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-800/50 border border-cyan-500/20 p-6 rounded-lg shadow-sm card-hover tech-card-2">
+                            <h4 class="font-semibold text-white mb-3">Frameworks</h4>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="mono tech-item-5">• ReactJS (Frontend)</li>
+                                <li class="mono tech-item-6">• FastAPI (Backend)</li>
+                                <li class="mono tech-item-7">• Flask (English Module)</li>
+                                <li class="mono tech-item-8">• Langchain (Embeddings)</li>
+                            </ul>
+                        </div>
+                        <div class="bg-gray-800/50 border border-purple-500/20 p-6 rounded-lg shadow-sm card-hover tech-card-3">
+                            <h4 class="font-semibold text-white mb-3">Infrastructure</h4>
+                            <ul class="space-y-2 text-sm text-gray-400">
+                                <li class="mono tech-item-9">• MongoDB (Database)</li>
+                                <li class="mono tech-item-10">• AWS EC2 (Deployment)</li>
+                                <li class="mono tech-item-11">• Docker (Containerization)</li>
+                                <li class="mono tech-item-12">• Ollama v0.5.14</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Milestones Section -->
+    <section id="milestones" class="py-20 bg-black relative overflow-hidden cyber-grid" >
+        <div class="absolute inset-0 tech-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold gradient-text mb-4 glow-text">Project Milestones</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Key phases and achievements throughout the research journey
+                </p>
+            </div>
+            
+            <div class="relative">
+                <!-- Timeline line -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 w-1 bg-gradient-to-b from-purple-500 to-cyan-500 h-full opacity-60"></div>
+                
+                <!-- Milestone items -->
+                <div class="space-y-12">
+                    <div class="flex items-center milestone-item">
+                        <div class="flex-1 pr-8 text-right">
+                            <div class="glassmorphism-card p-6 rounded-lg card-hover border-gradient">
+                                <h3 class="text-xl font-semibold text-white mb-2 glow-text">Project Proposal</h3>
+                                <p class="text-gray-300 mb-2">Initial research proposal and problem identification</p>
+                                <span class="text-sm text-purple-400 font-medium mono">Phase 1</span>
+                            </div>
+                        </div>
+                        <div class="relative z-10 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center neon-glow pulse-animation">
+                            <i class="fas fa-file-alt text-white"></i>
+                        </div>
+                        <div class="flex-1 pl-8"></div>
+                    </div>
+                    
+                    <div class="flex items-center milestone-item">
+                        <div class="flex-1 pr-8"></div>
+                        <div class="relative z-10 w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-full flex items-center justify-center neon-glow pulse-animation">
+                            <i class="fas fa-search text-white"></i>
+                        </div>
+                        <div class="flex-1 pl-8">
+                            <div class="glassmorphism-card p-6 rounded-lg card-hover border-gradient">
+                                <h3 class="text-xl font-semibold text-white mb-2 glow-text">Literature Review</h3>
+                                <p class="text-gray-300 mb-2">Comprehensive analysis of existing AI educational tools</p>
+                                <span class="text-sm text-cyan-400 font-medium mono">Phase 2</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center milestone-item">
+                        <div class="flex-1 pr-8 text-right">
+                            <div class="glassmorphism-card p-6 rounded-lg card-hover border-gradient">
+                                <h3 class="text-xl font-semibold text-white mb-2 glow-text">System Development</h3>
+                                <p class="text-gray-300 mb-2">Implementation of four specialized chatbots</p>
+                                <span class="text-sm text-purple-400 font-medium mono">Phase 3</span>
+                            </div>
+                        </div>
+                        <div class="relative z-10 w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-700 rounded-full flex items-center justify-center neon-glow pulse-animation">
+                            <i class="fas fa-code text-white"></i>
+                        </div>
+                        <div class="flex-1 pl-8"></div>
+                    </div>
+                    
+                    <div class="flex items-center milestone-item">
+                        <div class="flex-1 pr-8"></div>
+                        <div class="relative z-10 w-12 h-12 bg-gradient-to-br from-cyan-500 to-cyan-700 rounded-full flex items-center justify-center neon-glow pulse-animation">
+                            <i class="fas fa-vial text-white"></i>
+                        </div>
+                        <div class="flex-1 pl-8">
+                            <div class="glassmorphism-card p-6 rounded-lg card-hover border-gradient">
+                                <h3 class="text-xl font-semibold text-white mb-2 glow-text">Testing & Evaluation</h3>
+                                <p class="text-gray-300 mb-2">Performance testing and user feedback collection</p>
+                                <span class="text-sm text-cyan-400 font-medium mono">Phase 4</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center milestone-item">
+                        <div class="flex-1 pr-8 text-right">
+                            <div class="glassmorphism-card p-6 rounded-lg card-hover border-gradient">
+                                <h3 class="text-xl font-semibold text-white mb-2 glow-text">Final Report</h3>
+                                <p class="text-gray-300 mb-2">Complete documentation and research findings</p>
+                                <span class="text-sm text-green-400 font-medium mono">Phase 5</span>
+                            </div>
+                        </div>
+                        <div class="relative z-10 w-12 h-12 bg-gradient-to-br from-green-500 to-green-700 rounded-full flex items-center justify-center neon-glow pulse-animation">
+                            <i class="fas fa-flag-checkered text-white"></i>
+                        </div>
+                        <div class="flex-1 pl-8"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Downloads Section -->
+    <section id="downloads" class="py-20 bg-gray-900 relative overflow-hidden">
+        <div class="absolute inset-0 tech-pattern opacity-30"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold gradient-text mb-4 glow-text">Downloads</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Access research documents, reports, and supplementary materials
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-purple-500/20 border border-purple-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-purple-500/30 transition-all duration-300">
+                            <i class="fas fa-file-pdf text-purple-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Final Report</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Complete research paper on Generative AI-Driven Chatbots for Module-Specific Educational Support</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-700 text-white rounded-lg hover:from-purple-700 hover:to-purple-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fas fa-download mr-2"></i>
+                        Download PDF
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-green-500/20 border border-green-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-500/30 transition-all duration-300">
+                            <i class="fas fa-code text-green-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Source Code</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Implementation code for all four specialized chatbots with documentation</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:from-green-700 hover:to-green-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fab fa-github mr-2"></i>
+                        View Repository
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-cyan-500/30 transition-all duration-300">
+                            <i class="fas fa-chart-bar text-cyan-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Datasets</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Training datasets and evaluation metrics used in the research</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-cyan-600 to-cyan-700 text-white rounded-lg hover:from-cyan-700 hover:to-cyan-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fas fa-database mr-2"></i>
+                        Access Data
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-orange-500/20 border border-orange-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-500/30 transition-all duration-300">
+                            <i class="fas fa-play-circle text-orange-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Demo Videos</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Interactive demonstrations of each chatbot's capabilities</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 text-white rounded-lg hover:from-orange-700 hover:to-orange-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fas fa-video mr-2"></i>
+                        Watch Demos
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-red-500/20 border border-red-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-500/30 transition-all duration-300">
+                            <i class="fas fa-presentation text-red-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Presentation</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Research presentation slides and supporting materials</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-lg hover:from-red-700 hover:to-red-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fas fa-file-powerpoint mr-2"></i>
+                        View Slides
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover border-gradient group">
+                    <div class="flex items-center mb-4">
+                        <div class="w-12 h-12 bg-teal-500/20 border border-teal-500/30 rounded-lg flex items-center justify-center mr-4 group-hover:bg-teal-500/30 transition-all duration-300">
+                            <i class="fas fa-book text-teal-400 text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-semibold text-white glow-text">Documentation</h3>
+                    </div>
+                    <p class="text-gray-300 mb-6">Technical documentation and implementation guides</p>
+                    <a href="#" class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-teal-600 to-teal-700 text-white rounded-lg hover:from-teal-700 hover:to-teal-800 transform hover:scale-105 transition-all duration-200 neon-glow mono">
+                        <i class="fas fa-book-open mr-2"></i>
+                        Read Docs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Team Section -->
+    <section id="team" class="py-20 bg-black relative overflow-hidden cyber-grid ">
+        <div class="absolute inset-0 tech-pattern opacity-20"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold gradient-text mb-4 glow-text">Our Team</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Meet the researchers behind this innovative educational AI project
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <!-- Student Researchers -->
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-graduate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Ranasinghe T.R.</h3>
+                    <p class="text-purple-400 font-medium mb-3 mono">Researcher</p>
+                    <p class="text-gray-300 mb-4">Department of Software Engineering<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:it21144462@my.sliit.lk" class="inline-flex items-center text-purple-400 hover:text-purple-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        it21144462@my.sliit.lk
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-green-400 to-green-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-graduate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Jayawardhana E.K.</h3>
+                    <p class="text-green-400 font-medium mb-3 mono">Researcher</p>
+                    <p class="text-gray-300 mb-4">Department of Software Engineering<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:it21147678@my.sliit.lk" class="inline-flex items-center text-green-400 hover:text-green-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        it21147678@my.sliit.lk
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-cyan-400 to-cyan-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-graduate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Wickramasinghe W.G.S.H.V</h3>
+                    <p class="text-cyan-400 font-medium mb-3 mono">Researcher</p>
+                    <p class="text-gray-300 mb-4">Department of Software Engineering<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:it21568732@my.sliit.lk" class="inline-flex items-center text-cyan-400 hover:text-cyan-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        it21568732@my.sliit.lk
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-graduate text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Balasooriya S.N</h3>
+                    <p class="text-orange-400 font-medium mb-3 mono">Researcher</p>
+                    <p class="text-gray-300 mb-4">Department of Software Engineering<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:it21281532@my.sliit.lk" class="inline-flex items-center text-orange-400 hover:text-orange-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        it21281532@my.sliit.lk
+                    </a>
+                </div>
+            </div>
+
+            <div class="mt-12 flex flex-col md:flex-row justify-center gap-32">                
+                <!-- Supervisors -->
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Prof. Nuwan Kodagoda</h3>
+                    <p class="text-yellow-400 font-medium mb-3 mono">Project Supervisor</p>
+                    <p class="text-gray-300 mb-4">Department of Information Technology<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:nuwan.k@sliit.lk" class="inline-flex items-center text-yellow-400 hover:text-yellow-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        nuwan.k@sliit.lk
+                    </a>
+                </div>
+                
+                <div class="glassmorphism-card p-8 rounded-lg card-hover text-center border-gradient group">
+                    <div class="w-24 h-24 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full mx-auto mb-4 flex items-center justify-center neon-glow group-hover:scale-110 transition-transform duration-300">
+                        <i class="fas fa-user-tie text-white text-2xl"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-white mb-2 glow-text">Dr. Kalpani Manathunga</h3>
+                    <p class="text-teal-400 font-medium mb-3 mono">Co-Supervisor</p>
+                    <p class="text-gray-300 mb-4">Department of Software Engineering<br>Faculty of Computing, SLIIT</p>
+                    <a href="mailto:kalpani.m@sliit.lk" class="inline-flex items-center text-teal-400 hover:text-teal-300 transition-colors">
+                        <i class="fas fa-envelope mr-2"></i>
+                        kalpani.m@sliit.lk
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-20 bg-gray-900 relative overflow-hidden">
+        <div class="absolute inset-0 tech-pattern opacity-30"></div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl font-bold gradient-text mb-4 glow-text">Contact Us</h2>
+                <p class="text-xl text-gray-300 max-w-3xl mx-auto">
+                    Get in touch with our research team for collaboration opportunities or inquiries
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Contact Information -->
+                <div class="space-y-8">
+                    <div class="glassmorphism-card p-8 rounded-lg border-gradient">
+                        <h3 class="text-2xl font-semibold text-white mb-6 glow-text">Get In Touch</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start group">
+                                <div class="w-12 h-12 bg-purple-500/20 border border-purple-500/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-purple-500/30 transition-all duration-300">
+                                    <i class="fas fa-map-marker-alt text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-white mb-1 glow-text">Address</h4>
+                                    <p class="text-gray-300">Sri Lanka Institute of Information Technology<br>New Kandy Road, Malabe, Sri Lanka</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start group">
+                                <div class="w-12 h-12 bg-green-500/20 border border-green-500/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-green-500/30 transition-all duration-300">
+                                    <i class="fas fa-envelope text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-white mb-1 glow-text">Email</h4>
+                                    <p class="text-gray-300">it21/144462/147678/281532/568732@my.sliit.lk</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start group">
+                                <div class="w-12 h-12 bg-cyan-500/20 border border-cyan-500/30 rounded-lg flex items-center justify-center mr-4 flex-shrink-0 group-hover:bg-cyan-500/30 transition-all duration-300">
+                                    <i class="fas fa-graduation-cap text-cyan-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-semibold text-white mb-1 glow-text">Department</h4>
+                                    <p class="text-gray-300">Faculty of Computing<br>Department of Software Engineering</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Social Links -->
+                    <div class="gradient-bg p-8 rounded-lg text-white neon-glow">
+                        <h3 class="text-xl font-semibold mb-4 glow-text">Follow Our Research</h3>
+                        <div class="flex space-x-4">
+                            <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center hover:bg-opacity-30 transition-all duration-200 transform hover:scale-110">
+                                <i class="fab fa-github"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center hover:bg-opacity-30 transition-all duration-200 transform hover:scale-110">
+                                <i class="fab fa-linkedin"></i>
+                            </a>
+                            <a href="#" class="w-10 h-10 bg-white bg-opacity-20 rounded-lg flex items-center justify-center hover:bg-opacity-30 transition-all duration-200 transform hover:scale-110">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Contact Form -->
+                <div class="glassmorphism-card p-8 rounded-lg border-gradient">
+                    <h3 class="text-2xl font-semibold text-white mb-6 glow-text">Send us a Message</h3>
+                    
+                    <form class="space-y-6" id="contactForm">
+                        <div class="relative">
+                            <input type="text" id="name" class="peer w-full px-4 py-3 border border-gray-600 rounded-lg bg-gray-800/50 text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 placeholder-transparent" placeholder="Your Name" required>
+                            <label for="name" class="absolute left-4 -top-2.5 bg-gray-900 px-2 text-sm text-purple-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-400">Your Name</label>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="email" id="email" class="peer w-full px-4 py-3 border border-gray-600 rounded-lg bg-gray-800/50 text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 placeholder-transparent" placeholder="Your Email" required>
+                            <label for="email" class="absolute left-4 -top-2.5 bg-gray-900 px-2 text-sm text-purple-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-400">Your Email</label>
+                        </div>
+                        
+                        <div class="relative">
+                            <input type="text" id="subject" class="peer w-full px-4 py-3 border border-gray-600 rounded-lg bg-gray-800/50 text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 placeholder-transparent" placeholder="Subject" required>
+                            <label for="subject" class="absolute left-4 -top-2.5 bg-gray-900 px-2 text-sm text-purple-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-400">Subject</label>
+                        </div>
+                        
+                        <div class="relative">
+                            <textarea id="message" rows="5" class="peer w-full px-4 py-3 border border-gray-600 rounded-lg bg-gray-800/50 text-white focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all duration-200 placeholder-transparent resize-none" placeholder="Your Message" required></textarea>
+                            <label for="message" class="absolute left-4 -top-2.5 bg-gray-900 px-2 text-sm text-purple-400 transition-all peer-placeholder-shown:text-base peer-placeholder-shown:text-gray-400 peer-placeholder-shown:top-3 peer-focus:-top-2.5 peer-focus:text-sm peer-focus:text-purple-400">Your Message</label>
+                        </div>
+                        
+                        <button type="submit" class="w-full gradient-bg text-white py-3 px-6 rounded-lg font-semibold hover:opacity-90 transform hover:scale-105 transition-all duration-200 focus:ring-2 focus:ring-purple-500/20 neon-glow">
+                            <span class="flex items-center justify-center">
+                                <i class="fas fa-paper-plane mr-2"></i>
+                                <span id="buttonText">Send Message</span>
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-950 text-white py-12 border-t border-gray-800 cyber-grid">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 gradient-text glow-text">Research Project</h3>
+                    <p class="text-gray-400 mb-4">Generative AI-Driven Chatbots for Module-Specific Educational Support</p>
+                    <p class="text-gray-400">© 2024 SLIIT Faculty of Computing</p>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 gradient-text glow-text">Quick Links</h3>
+                    <ul class="space-y-2">
+                        <li><a href="#home" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">Home</a></li>
+                        <li><a href="#scope" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">Project Scope</a></li>
+                        <li><a href="#milestones" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">Milestones</a></li>
+                        <li><a href="#downloads" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">Downloads</a></li>
+                        <li><a href="#team" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">Team</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="text-xl font-semibold mb-4 gradient-text glow-text">Institution</h3>
+                    <p class="text-gray-400 mb-2">Sri Lanka Institute of Information Technology</p>
+                    <p class="text-gray-400 mb-2">Faculty of Computing</p>
+                    <p class="text-gray-400">Malabe, Sri Lanka</p>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-800 mt-8 pt-8 text-center">
+                <p class="text-gray-400 glow-text">Advancing Education through Artificial Intelligence</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button id="backToTop" class="fixed bottom-8 right-8 w-12 h-12 gradient-bg text-white rounded-full shadow-lg hover:opacity-90 transform hover:scale-110 transition-all duration-200 opacity-0 invisible neon-glow">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Initialize Framer Motion
+        const { motion, AnimatePresence } = window.Motion;
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Auto-hide navbar on scroll
+        let lastScrollTop = 0;
+        let scrollTimeout;
+        const navbar = document.querySelector('nav');
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            
+            // Clear any existing timeout
+            clearTimeout(scrollTimeout);
+            
+            // Always show navbar at the very top
+            if (scrollTop <= 100) {
+                navbar.classList.remove('-translate-y-full');
+                navbar.classList.add('translate-y-0');
+                lastScrollTop = scrollTop;
+                return;
+            }
+            
+            // Scrolling down - hide navbar
+            if (scrollTop > lastScrollTop && scrollTop > 100) {
+                navbar.classList.remove('translate-y-0');
+                navbar.classList.add('-translate-y-full');
+            } 
+            // Scrolling up - show navbar
+            else if (scrollTop < lastScrollTop) {
+                navbar.classList.remove('-translate-y-full');
+                navbar.classList.add('translate-y-0');
+            }
+            
+            lastScrollTop = scrollTop;
+            
+            // Add a small delay before hiding to prevent flickering on small scrolls
+            scrollTimeout = setTimeout(() => {
+                if (scrollTop > lastScrollTop && scrollTop > 100) {
+                    navbar.classList.remove('translate-y-0');
+                    navbar.classList.add('-translate-y-full');
+                }
+            }, 150);
+        });
+
+        // Show/hide navbar based on mouse position
+        document.addEventListener('mousemove', (e) => {
+            const isNearTop = e.clientY <= 80;
+            const isOverNavbar = navbar.contains(e.target);
+            const hasScrolled = window.pageYOffset > 100;
+
+            if (isNearTop && hasScrolled) {
+                // Show navbar
+                navbar.classList.remove('-translate-y-full');
+                navbar.classList.add('translate-y-0');
+            } else if (!isOverNavbar && hasScrolled) {
+                // Hide navbar if mouse is away from navbar
+                navbar.classList.remove('translate-y-0');
+                navbar.classList.add('-translate-y-full');
+            }
+        });
+
+        // Ensure navbar is visible when mobile menu is toggled
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        if (mobileMenuButton && mobileMenu) {
+            mobileMenuButton.addEventListener('click', () => {
+                // Show navbar when opening mobile menu
+                navbar.classList.remove('-translate-y-full');
+                navbar.classList.add('translate-y-0');
+                
+                // Toggle mobile menu
+                mobileMenu.classList.toggle('hidden');
+            });
+        }
+
+        // Scroll indicator
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.pageYOffset;
+            const docHeight = document.body.scrollHeight - window.innerHeight;
+            const scrollPercent = (scrollTop / docHeight) * 100;
+            document.getElementById('scrollIndicator').style.width = scrollPercent + '%';
+        });
+
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTop.classList.remove('opacity-0', 'invisible');
+                backToTop.classList.add('opacity-100', 'visible');
+            } else {
+                backToTop.classList.add('opacity-0', 'invisible');
+                backToTop.classList.remove('opacity-100', 'visible');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Form submission with enhanced animations
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitButton = this.querySelector('button[type="submit"]');
+            const buttonText = document.getElementById('buttonText');
+            const originalText = buttonText.innerHTML;
+            
+            // Add loading state with animation
+            submitButton.classList.add('animate-pulse');
+            buttonText.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Sending...';
+            submitButton.disabled = true;
+            
+            // Simulate form submission with realistic delay
+            setTimeout(() => {
+                // Success animation
+                submitButton.classList.remove('animate-pulse');
+                submitButton.classList.add('bg-green-500');
+                buttonText.innerHTML = '<i class="fas fa-check mr-2"></i>Message Sent!';
+                
+                // Show success notification
+                showNotification('Thank you! Your message has been sent successfully. We will get back to you soon.', 'success');
+                
+                // Reset form
+                this.reset();
+                
+                // Reset button after delay
+                setTimeout(() => {
+                    submitButton.classList.remove('bg-green-500');
+                    buttonText.innerHTML = originalText;
+                    submitButton.disabled = false;
+                }, 3000);
+            }, 2000);
+        });
+
+        // Enhanced notification system
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transform translate-x-full transition-all duration-300 ${
+                type === 'success' ? 'bg-green-500' : 
+                type === 'error' ? 'bg-red-500' : 
+                'bg-blue-500'
+            } text-white max-w-sm`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center">
+                    <i class="fas ${type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle'} mr-3"></i>
+                    <p class="flex-1">${message}</p>
+                    <button onclick="this.parentElement.parentElement.remove()" class="ml-4 text-white hover:text-gray-200">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Auto remove after 5 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => notification.remove(), 300);
+            }, 5000);
+        }
+
+        // Intersection Observer for animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-fade-in');
+                    
+                    // Add stagger effect for form elements
+                    if (entry.target.querySelector('form')) {
+                        const formElements = entry.target.querySelectorAll('.relative');
+                        formElements.forEach((el, index) => {
+                            setTimeout(() => {
+                                el.style.animation = `fadeInUp 0.6s ease forwards`;
+                            }, index * 100);
+                        });
+                    }
+                }
+            });
+        }, observerOptions);
+
+        // Observe contact section
+        const contactSection = document.getElementById('contact');
+        if (contactSection) {
+            observer.observe(contactSection);
+        }
+
+        // Enhanced input focus animations
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.parentElement.classList.add('transform', 'scale-105');
+            });
+            
+            input.addEventListener('blur', function() {
+                this.parentElement.classList.remove('transform', 'scale-105');
+            });
+        });
+
+        // Scroll to section function
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        }
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .animate-fade-in {
+                animation: fadeInUp 0.8s ease forwards;
+            }
+            
+            .glow-text {
+                text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+            }
+            
+            .border-gradient {
+                border: 2px solid transparent;
+                background: linear-gradient(var(--dark-gray), var(--dark-gray)) padding-box,
+                            linear-gradient(135deg, var(--purple), var(--cyan)) border-box;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
