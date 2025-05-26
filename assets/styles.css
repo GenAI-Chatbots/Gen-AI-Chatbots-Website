@@ -353,3 +353,6 @@ body {
             transform: scale(1.1) rotate(5deg);
         }
 
+#backToTop {
+    z-index: 9999; /* High value to ensure it’s above all other elements */
+}
